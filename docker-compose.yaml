@@ -1,0 +1,67 @@
+services:
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: prod
+    environment:
+      CHROMA_URL: ${CHROMA_URL}
+      OLLAMA_URL: ${OLLAMA_URL}
+      OLLAMA_EMBEDDING: ${OLLAMA_EMBEDDING}
+      OAUTH2_ISSUER_URL: ${OAUTH2_ISSUER_URL}
+      OTLP_URL: ${OTLP_URL}
+    ports:
+      - "8081:8081"
+    restart: unless-stopped
+    depends_on:
+      - keycloak
+      - chroma
+      - ollama
+  otel:
+    image: grafana/otel-lgtm:0.40.0
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+      - "4317:4317"
+      - "4318:4318"
+    volumes:
+      - otel-lgtm-data:/data
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.2
+    command: start-dev
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+  chroma:
+    image: chromadb/chroma:1.5.9
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma/chroma
+      - ANONYMIZED_TELEMETRY=FALSE
+    volumes:
+      - chroma_data:/chroma/chroma
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/v2/healthcheck" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  ollama:
+    image: ollama/ollama:0.40.16
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+volumes:
+  ollama_data:
+  chroma_data:
+  keycloak_data:
+  otel-lgtm-data:

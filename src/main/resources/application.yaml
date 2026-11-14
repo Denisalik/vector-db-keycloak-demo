@@ -1,0 +1,48 @@
+spring:
+  ai:
+    vectorstore:
+      chroma:
+        client:
+          host: ${CHROMA_URL:http://localhost}
+          port: 8000
+        collection-name: demo
+        initialize-schema: true
+    ollama:
+      base-url: ${OLLAMA_URL:http://localhost:11434}
+      embedding:
+        model: ${OLLAMA_EMBEDDING:embeddinggemma}
+        keep-alive: 5m
+  application:
+    name: vector-db-keycloak-demo
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_ISSUER_URL:http://localhost:8080/realms/demo}
+server:
+  port: 8081
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - metrics
+          - prometheus
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    metrics:
+      export:
+        url: ${OTLP_URL:http://localhost:4318/v1}/metrics
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: ${OTLP_URL:http://localhost:4318/v1}/traces
+    logging:
+      export:
+        otlp:
+          endpoint: ${OTLP_URL:http://localhost:4318/v1}/logs

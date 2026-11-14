@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Introduce Spring Boot default log configuration -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <!-- OpenTelemetry Appender: responsible for sending logs to the OTLP endpoint -->
+    <appender name="OTEL" class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
+        <!-- Capture experimental attributes (such as trace_id, span_id, etc.) for log-trace correlation -->
+        <captureExperimentalAttributes>true</captureExperimentalAttributes>
+        <!-- Capture all MDC fields (such as custom context information) -->
+        <captureMdcAttributes>*</captureMdcAttributes>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="OTEL"/>
+    </root>
+</configuration>
