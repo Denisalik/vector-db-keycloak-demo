@@ -10,11 +10,10 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm run build
 
-FROM nginx:1.31.5-alpine as docker-production
+FROM caddy:2.11.9-alpine AS docker-production
 
-RUN rm -rf /usr/share/nginx/html/*
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist /srv
+COPY Caddyfile /etc/caddy/Caddyfile
 
-COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]

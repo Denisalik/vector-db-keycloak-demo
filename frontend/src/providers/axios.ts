@@ -1,7 +1,7 @@
 import axios from 'axios';
 import keycloak from './keycloak';
 
-const baseURL = import.meta.env.VITE_BACKEND_API_BASE;
+const baseURL = import.meta.env.VITE_BACKEND_API_BASE + '/api';
 const api = axios.create({ baseURL });
 
 api.interceptors.request.use(async (config) => {

@@ -24,7 +24,7 @@ class EmbeddingController(
     private val repo: MoviesInMemoryRepository,
 ) {
 
-    @PostMapping("/")
+    @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
     fun embeddingAddNew(@RequestBody embedding: EmbeddingNewRequest): ResponseEntity<Map<String, String>> {
         val metadata = mapOf("title" to embedding.title, "id" to UUID.randomUUID().toString(), "overview" to embedding.text)
@@ -39,7 +39,7 @@ class EmbeddingController(
         return ResponseEntity.ok(id)
     }
 
-    @GetMapping("/")
+    @PostMapping("/")
     fun getSimilarity(@RequestBody similarity: GetSimilarityRequest) = embeddingService
         .findSimilar(similarity.text, similarity.topK, similarity.threshold)
         .map { GetSimilarityMovieResponse.fromDocument(it) }

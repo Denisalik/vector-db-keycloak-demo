@@ -1,4 +1,5 @@
 # VectorDB(Chroma)+Keycloak demo Application and OTEL
+![frontend](docs/keycloak%20frontend.png)
 ## Prerequisites
 ### Embeddings
 Pulling embedding model to ollama container:
@@ -13,9 +14,15 @@ you need to have python at least version>=3.9
 ```shell
 cd tools
 sh download_dataset.sh
+docker compose build
+docker compose up
+#then wait when dataset is populated into chromaDB, it will take a lot of time
 ```
 ### Keycloak
-Create realm=demo and create User
+Create realm=demo, create User, Create realm role ROLE_ADMIN and it to user.
+
+cd /opt/keycloak/bin/
+sh ./kc.sh export --dir /tmp/keycloak/ --users realm_file
 
 Create client with PKCE, example:
 ![client example general](docs/keycloak_client_1.png)
@@ -86,6 +93,3 @@ Result is pretty good, 3 toy stories + film with no overview that contains word 
 - [Toy Story That Time Forgot](https://en.wikipedia.org/wiki/Toy_Story_That_Time_Forgot)
 - [Hawaiian Vacation](https://en.wikipedia.org/wiki/Hawaiian_Vacation)
 - [Toy Story of Terror!](https://en.wikipedia.org/wiki/Toy_Story_of_Terror!)
-
-# Todo
-- Add frontend for that
