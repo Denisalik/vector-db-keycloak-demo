@@ -1,5 +1,6 @@
 package com.denisalik.vectordbkeycloakdemo.config
 
+import com.denisalik.vectordbkeycloakdemo.converter.KeycloakRealmRoleConverter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
@@ -32,14 +33,6 @@ class SecurityConfig {
         return http.build()
     }
 
-    private fun keycloakJwtConverter(): JwtAuthenticationConverter {
-        val authoritiesConverter = JwtGrantedAuthoritiesConverter()
-        // Keycloak's realm roles are in realm_access.roles
-        authoritiesConverter.setAuthoritiesClaimName("realm_access.roles")
-        authoritiesConverter.setAuthorityPrefix("ROLE_")
-
-        val converter = JwtAuthenticationConverter()
-        converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter)
-        return converter
-    }
+    private fun keycloakJwtConverter() = JwtAuthenticationConverter()
+        .apply { setJwtGrantedAuthoritiesConverter(KeycloakRealmRoleConverter()) }
 }

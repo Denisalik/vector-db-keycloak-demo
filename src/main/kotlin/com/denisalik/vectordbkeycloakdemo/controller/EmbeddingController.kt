@@ -26,19 +26,18 @@ class EmbeddingController(
 
     @PostMapping("/")
     @PreAuthorize("hasRole('ADMIN')")
-    fun embeddingAddNew(@RequestBody embedding: EmbeddingNewRequest): ResponseEntity<Void> {
+    fun embeddingAddNew(@RequestBody embedding: EmbeddingNewRequest): ResponseEntity<Map<String, String>> {
         val metadata = mapOf("title" to embedding.title, "id" to UUID.randomUUID().toString(), "overview" to embedding.text)
         embeddingService.embedAndStore(embedding.text, metadata)
-        return ResponseEntity.noContent().build()
+        return ResponseEntity.ok(metadata)
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    fun embeddingRemove(@PathVariable id: String): ResponseEntity<Void> {
+    fun embeddingRemove(@PathVariable id: String): ResponseEntity<String> {
         embeddingService.deleteById(id)
-        return ResponseEntity.noContent().build()
+        return ResponseEntity.ok(id)
     }
-
 
     @GetMapping("/")
     fun getSimilarity(@RequestBody similarity: GetSimilarityRequest) = embeddingService

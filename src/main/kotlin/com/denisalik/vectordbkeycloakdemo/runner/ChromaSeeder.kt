@@ -13,6 +13,7 @@ class ChromaSeeder(
     private val repo: MoviesInMemoryRepository
 ): CommandLineRunner {
     private val log = LoggerFactory.getLogger(ChromaSeeder::class.java)
+    private val batchSize = 50
 
     override fun run(vararg args: String) {
         log.info("*".repeat(50))
@@ -20,9 +21,14 @@ class ChromaSeeder(
             log.info("Reading movies.json...")
             val data = repo.findAll()
             log.info("Adding data to ChromaDB...")
+            //used batches, to evade 413 status code, there are (907+1)*50+1*36 records
             data
                 .map { Document(it.toVectorString(), it.toMetadata()) }
-                .let { embeddingService.embedAndStore(it) }
+                .chunked(batchSize)
+                .forEachIndexed { index, batch ->
+                    embeddingService.embedAndStore(batch)
+                    log.info("Batch $index is pushed into ChromaDB with ${batch.size} records.")
+                }
         } else {
             log.info("Data already exist in ChromaDB.")
         }

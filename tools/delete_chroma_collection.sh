@@ -1,0 +1,1 @@
+curl -X DELETE http://localhost:8000/api/v2/tenants/SpringAiTenant/databases/SpringAiDatabase/collections/demo

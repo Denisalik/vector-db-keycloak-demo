@@ -9,9 +9,10 @@ data class Movie(
     val keywords: List<String> = listOf(),
 ){
     fun toVectorString(): String {
-        val overviewText = overview.ifEmpty { "" }
-        val keywordsText = if (keywords.isEmpty()) "" else keywords.joinToString(" ")
-        return "$originalTitle $overviewText $keywordsText".trim()
+        val strings = mutableListOf("Title: $originalTitle")
+        if (keywords.isNotEmpty()) strings.add(keywords.joinToString(", ", "Keywords: "))
+        if (overview.trim().isNotEmpty()) strings.add("Body: ${overview.trim()}")
+        return strings.joinToString("\n")
     }
 
     fun toMetadata() = mapOf(

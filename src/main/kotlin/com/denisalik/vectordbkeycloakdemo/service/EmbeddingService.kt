@@ -32,9 +32,6 @@ class EmbeddingService(
 
     fun embedAndStore(documents: List<Document>) = vectorStore.add(documents)
 
-    /**
-     * Delete by title from chromaDB
-     */
     fun deleteById(id: String) {
         val filter = FilterExpressionBuilder()
         val criteria = filter.eq("id", id).build()
