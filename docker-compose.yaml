@@ -18,6 +18,16 @@ services:
       - keycloak
       - chroma
       - ollama
+#  frontend:
+#    build:
+#      context: ./frontend/
+#      target: docker-production
+#      dockerfile: Dockerfile
+#    ports:
+#      - "80:80"
+#    restart: unless-stopped
+#    depends_on:
+#      - backend
   otel:
     image: grafana/otel-lgtm:0.40.0
     restart: unless-stopped
