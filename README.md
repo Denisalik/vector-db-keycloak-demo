@@ -1,5 +1,6 @@
 # VectorDB(Chroma)+Keycloak demo Application and OTEL
 ![frontend](docs/keycloak%20frontend.png)
+Look at recipes in `Justfile` or execute `just`. All explanations and code below(you can execute it manually if you don't have `just`). 
 ## Prerequisites
 ### Embeddings
 Pulling embedding model to ollama container:
@@ -21,12 +22,10 @@ docker compose up
 ### Keycloak
 Create realm=demo, create User, Create realm role ROLE_ADMIN and it to user.
 
-cd /opt/keycloak/bin/
-sh ./kc.sh export --dir /tmp/keycloak/ --users realm_file
-
-Create client with PKCE, example:
+Create client with PKCE and toggle registration, example:
 ![client example general](docs/keycloak_client_1.png)
 ![client example flow](docs/keycloak_client_2.png)
+![client example registration](docs/keycloak_client_3.png)
 ## Start
 ```shell
 docker compose up
