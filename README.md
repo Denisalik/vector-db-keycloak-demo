@@ -1,6 +1,8 @@
 # VectorDB(Chroma)+Keycloak demo Application and OTEL
 ![frontend](docs/keycloak%20frontend.png)
-Look at recipes in `Justfile` or execute `just`. All explanations and code below(you can execute it manually if you don't have `just`). 
+Look at recipes in `Justfile` or execute `just`.
+
+All explanations and code below(you can execute it manually if you don't have `just`). 
 ## Prerequisites
 ### Embeddings
 Pulling embedding model to ollama container:
@@ -20,7 +22,7 @@ docker compose up
 #then wait when dataset is populated into chromaDB, it will take a lot of time
 ```
 ### Keycloak
-Create realm=demo, create User, Create realm role ROLE_ADMIN and it to user.
+Create realm=demo, Create realm role ROLE_ADMIN, create User + set credentials and map ROLE_ADMIN to user.
 
 Create client with PKCE and toggle registration, example:
 ![client example general](docs/keycloak_client_1.png)
@@ -31,7 +33,7 @@ Create client with PKCE and toggle registration, example:
 docker compose up
 ``` 
 After authorization, you can use service to show similar result:
-![similarity toy stoty](docs/test%20similarity.png)
+![similarity toy story](docs/test%20similarity.png)
 ```json
 [
     {
