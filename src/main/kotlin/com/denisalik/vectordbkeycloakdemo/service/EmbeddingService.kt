@@ -18,15 +18,19 @@ class EmbeddingService(
 ) {
     private val tenant = ChromaApiConstants.DEFAULT_TENANT_NAME
     private val database = ChromaApiConstants.DEFAULT_DATABASE_NAME
-    private val collectionId = chromaApi
-        .getCollection(tenant, database, collection)
-        ?.id
-        ?: throw Exception("Collection $collection not found")
+    private val collectionId =
+        chromaApi
+            .getCollection(tenant, database, collection)
+            ?.id
+            ?: throw Exception("Collection $collection not found")
 
     /**
      * Accept text, automatically generate embedding via Ollama, and store in ChromaDB
      */
-    fun embedAndStore(text: String, metadata: Map<String, String>) = embedAndStore(Document(text, metadata))
+    fun embedAndStore(
+        text: String,
+        metadata: Map<String, String>,
+    ) = embedAndStore(Document(text, metadata))
 
     fun embedAndStore(document: Document) = embedAndStore(listOf(document))
 
@@ -41,7 +45,11 @@ class EmbeddingService(
     /**
      * Accept query text, return similar documents
      */
-    fun findSimilar(text: String, topK: Int?, threshold: Double?) = SearchRequest
+    fun findSimilar(
+        text: String,
+        topK: Int?,
+        threshold: Double?,
+    ) = SearchRequest
         .builder()
         .query(text)
         .topK(topK ?: 5)
@@ -52,5 +60,4 @@ class EmbeddingService(
     fun isCollectionPopulated() = collectionCount() > 0L
 
     fun collectionCount() = chromaApi.countEmbeddings(tenant, database, collectionId) ?: 0L
-
 }

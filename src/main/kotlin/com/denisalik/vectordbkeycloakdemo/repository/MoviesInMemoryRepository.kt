@@ -14,6 +14,7 @@ class MoviesInMemoryRepository(
     private val moviesResource: Resource,
 ) {
     private val moviesMap = readFile()
+
     private fun readFile() = objectMapper.readValue<Map<String, Movie>>(moviesResource.inputStream)
 
     fun findAll() = moviesMap.values

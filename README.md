@@ -94,3 +94,11 @@ Result is pretty good, 3 toy stories + film with no overview that contains word 
 - [Toy Story That Time Forgot](https://en.wikipedia.org/wiki/Toy_Story_That_Time_Forgot)
 - [Hawaiian Vacation](https://en.wikipedia.org/wiki/Hawaiian_Vacation)
 - [Toy Story of Terror!](https://en.wikipedia.org/wiki/Toy_Story_of_Terror!)
+
+## Linter
+```shell
+#see lint results
+just lint
+#format code
+just format
+```

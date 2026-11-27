@@ -23,10 +23,11 @@ class EmbeddingController(
     private val embeddingService: EmbeddingService,
     private val repo: MoviesInMemoryRepository,
 ) {
-
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
-    fun embeddingAddNew(@RequestBody embedding: EmbeddingNewRequest): ResponseEntity<Map<String, String>> {
+    fun embeddingAddNew(
+        @RequestBody embedding: EmbeddingNewRequest,
+    ): ResponseEntity<Map<String, String>> {
         val metadata = mapOf("title" to embedding.title, "id" to UUID.randomUUID().toString(), "overview" to embedding.text)
         embeddingService.embedAndStore(embedding.text, metadata)
         return ResponseEntity.ok(metadata)
@@ -34,25 +35,26 @@ class EmbeddingController(
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    fun embeddingRemove(@PathVariable id: String): ResponseEntity<String> {
-        embeddingService.deleteById(id)
-        return ResponseEntity.ok(id)
-    }
+    fun embeddingRemove(
+        @PathVariable id: String,
+    ) = ResponseEntity.ok(id.also { embeddingService.deleteById(it) })
 
     @PostMapping("/")
-    fun getSimilarity(@RequestBody similarity: GetSimilarityRequest) = embeddingService
+    fun getSimilarity(
+        @RequestBody similarity: GetSimilarityRequest,
+    ) = embeddingService
         .findSimilar(similarity.text, similarity.topK, similarity.threshold)
         .map { GetSimilarityMovieResponse.fromDocument(it) }
         .let { ResponseEntity.ok(it) }
 
     @GetMapping("/{id}")
-    fun getMovieById(@PathVariable id: String): ResponseEntity<Movie> {
-        return repo
+    fun getMovieById(
+        @PathVariable id: String,
+    ): ResponseEntity<Movie> =
+        repo
             .findById(id)
             ?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity
                 .notFound()
                 .build()
-    }
-
 }

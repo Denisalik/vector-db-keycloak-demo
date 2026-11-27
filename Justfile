@@ -17,3 +17,9 @@ docker-ollama-pull:
 docker-download-dataset:
     cd tools && sh download_dataset.sh
     @just start
+
+lint:
+    ./gradlew ktlintCheck
+
+format:
+    ./gradlew ktlintFormat

@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component
 @Component
 class ChromaSeeder(
     private val embeddingService: EmbeddingService,
-    private val repo: MoviesInMemoryRepository
-): CommandLineRunner {
+    private val repo: MoviesInMemoryRepository,
+) : CommandLineRunner {
     private val log = LoggerFactory.getLogger(ChromaSeeder::class.java)
     private val batchSize = 50
 
@@ -21,7 +21,7 @@ class ChromaSeeder(
             log.info("Reading movies.json...")
             val data = repo.findAll()
             log.info("Adding data to ChromaDB...")
-            //used batches, to evade 413 status code, there are (907+1)*50+1*36 records
+            // used batches, to evade 413 status code, there are (907+1)*50+1*36 records
             data
                 .map { Document(it.toVectorString(), it.toMetadata()) }
                 .chunked(batchSize)

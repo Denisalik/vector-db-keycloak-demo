@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/auth")
 class AuthController {
     @GetMapping("/me")
-    fun me(@AuthenticationPrincipal jwt: Jwt, auth: Authentication) = MeResponse(
+    fun me(
+        @AuthenticationPrincipal jwt: Jwt,
+        auth: Authentication,
+    ) = MeResponse(
         userId = jwt.subject ?: throw IllegalStateException("JWT missing required subject"),
         username = jwt.getClaim("preferred_username") ?: throw IllegalStateException("JWT missing required preferred_username claim"),
         email = jwt.getClaim("email"),
-        authorities = auth.authorities.mapNotNull { it.authority }
+        authorities = auth.authorities.mapNotNull { it.authority },
     ).let { ResponseEntity.ok(it) }
 }

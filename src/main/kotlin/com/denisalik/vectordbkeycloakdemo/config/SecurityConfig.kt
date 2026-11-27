@@ -9,10 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
@@ -35,20 +33,22 @@ class SecurityConfig {
         }
         return http.build()
     }
-    @Bean
-    fun corsConfigurationSource() = CorsConfiguration()
-        .apply {
-            allowedOrigins = listOf("*")
-            allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
-            allowedHeaders = listOf("*")
-            allowCredentials = false
-            maxAge = 3600L
-        }
-        .let {
-            UrlBasedCorsConfigurationSource()
-                .apply { registerCorsConfiguration("/**", it) }
-        }
 
-    private fun keycloakJwtConverter() = JwtAuthenticationConverter()
-        .apply { setJwtGrantedAuthoritiesConverter(KeycloakRealmRoleConverter()) }
+    @Bean
+    fun corsConfigurationSource() =
+        CorsConfiguration()
+            .apply {
+                allowedOrigins = listOf("*")
+                allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                allowedHeaders = listOf("*")
+                allowCredentials = false
+                maxAge = 3600L
+            }.let {
+                UrlBasedCorsConfigurationSource()
+                    .apply { registerCorsConfiguration("/**", it) }
+            }
+
+    private fun keycloakJwtConverter() =
+        JwtAuthenticationConverter()
+            .apply { setJwtGrantedAuthoritiesConverter(KeycloakRealmRoleConverter()) }
 }
